@@ -26,6 +26,17 @@ class BeadPatternApp:
         ("所有文件", "*.*"),
     )
 
+    # 预设背景色选项
+    BG_COLOR_OPTIONS = [
+        ("不替换", ""),
+        ("白色 #FFFFFF", "#FFFFFF"),
+        ("黑色 #000000", "#000000"),
+        ("红色 #FF0000", "#FF0000"),
+        ("蓝色 #0000FF", "#0000FF"),
+        ("绿色 #00FF00", "#00FF00"),
+        ("黄色 #FFFF00", "#FFFF00"),
+    ]
+
     def __init__(self, root: tk.Tk):
         self.root = root
         self.root.title("拼豆图纸生成器 — Perler Bead Pattern Generator")
@@ -38,9 +49,7 @@ class BeadPatternApp:
         self.current_palette = load_palette()
         self._processing = False
 
-        # 设置样式
         self._setup_styles()
-        # 构建界面
         self._create_widgets()
 
     def _setup_styles(self):
@@ -50,7 +59,7 @@ class BeadPatternApp:
         style.configure("Generate.TButton", font=("", 11, "bold"))
 
     def _create_widgets(self):
-        # ── 顶部菜单栏 ──
+        # ── 菜单栏 ──
         menubar = tk.Menu(self.root)
         self.root.config(menu=menubar)
 
@@ -65,7 +74,6 @@ class BeadPatternApp:
         help_menu.add_command(label="关于", command=self._show_about)
         menubar.add_cascade(label="帮助", menu=help_menu)
 
-        # 快捷键
         self.root.bind("<Control-o>", lambda e: self.on_open_image())
         self.root.bind("<Control-s>", lambda e: self.on_save())
 
@@ -90,7 +98,7 @@ class BeadPatternApp:
         # 左侧原始图 Canvas
         self.left_canvas = tk.Canvas(left_frame, bg="#F0F0F0", highlightthickness=0)
         self.left_canvas.pack(fill=tk.BOTH, expand=True)
-        self.left_canvas.create_text(200, 200, text="点击「打开图片」选择图片", fill="#999999", font=("", 12), tags="placeholder")
+        self.left_canvas.create_text(200, 176, text="点击「打开图片」选择图片", fill="#999999", font=("", 10), tags="placeholder")
 
         # 右侧图纸 Canvas + 滚动条
         right_inner = ttk.Frame(right_frame)
@@ -108,48 +116,72 @@ class BeadPatternApp:
         self.h_scroll.pack(side=tk.BOTTOM, fill=tk.X)
         self.v_scroll.pack(side=tk.RIGHT, fill=tk.Y)
         self.right_canvas.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
-        self.right_canvas.create_text(250, 250, text="生成后图纸将显示在这里", fill="#999999", font=("", 12), tags="placeholder")
+        self.right_canvas.create_text(250, 205, text="生成后图纸将显示在这里", fill="#999999", font=("", 10), tags="placeholder")
 
-        # 滚动绑定
-        self.right_canvas.bind("<Configure>", self._on_right_canvas_resize)
-
-        # ── 底部控制面板 ──
+        # ── 底部控制面板（两行） ──
         control_frame = ttk.LabelFrame(self.root, text="设置", padding=(8, 6))
         control_frame.pack(fill=tk.X, padx=8, pady=(4, 0))
 
-        # 第一行
+        # 第一行：尺寸 + 色板 + 抖动的开关
         row1 = ttk.Frame(control_frame)
         row1.pack(fill=tk.X, pady=2)
 
         ttk.Label(row1, text="宽度:").pack(side=tk.LEFT)
         self.width_var = tk.IntVar(value=50)
-        self.width_spin = ttk.Spinbox(row1, from_=5, to=200, textvariable=self.width_var, width=5)
-        self.width_spin.pack(side=tk.LEFT, padx=2)
+        ttk.Spinbox(row1, from_=5, to=200, textvariable=self.width_var, width=5).pack(side=tk.LEFT, padx=2)
 
-        ttk.Label(row1, text="高度:", padx=(12, 0)).pack(side=tk.LEFT)
+        ttk.Label(row1, text="高度:").pack(side=tk.LEFT, padx=(8, 0))
         self.height_var = tk.IntVar(value=50)
-        self.height_spin = ttk.Spinbox(row1, from_=5, to=200, textvariable=self.height_var, width=5)
-        self.height_spin.pack(side=tk.LEFT, padx=2)
+        ttk.Spinbox(row1, from_=5, to=200, textvariable=self.height_var, width=5).pack(side=tk.LEFT, padx=2)
 
-        ttk.Label(row1, text="色板:", padx=(12, 0)).pack(side=tk.LEFT)
+        ttk.Label(row1, text="色板:").pack(side=tk.LEFT, padx=(8, 0))
         self.palette_var = tk.StringVar(value="perler")
         palette_names = list_available_palettes() or ["perler"]
-        self.palette_combo = ttk.Combobox(row1, textvariable=self.palette_var, values=palette_names, width=12, state="readonly")
+        self.palette_combo = ttk.Combobox(row1, textvariable=self.palette_var, values=palette_names, width=10, state="readonly")
         self.palette_combo.pack(side=tk.LEFT, padx=2)
         self.palette_combo.bind("<<ComboboxSelected>>", self._on_palette_change)
 
         self.dither_var = tk.BooleanVar(value=True)
-        ttk.Checkbutton(row1, text="启用抖动", variable=self.dither_var).pack(side=tk.LEFT, padx=(12, 0))
+        ttk.Checkbutton(row1, text="抖动", variable=self.dither_var).pack(side=tk.LEFT, padx=(8, 0))
 
-        ttk.Label(row1, text="豆粒大小:", padx=(12, 0)).pack(side=tk.LEFT)
+        ttk.Label(row1, text="豆粒:").pack(side=tk.LEFT, padx=(8, 0))
         self.bead_scale_var = tk.IntVar(value=16)
-        self.bead_scale = ttk.Scale(row1, from_=8, to=32, variable=self.bead_scale_var, orient=tk.HORIZONTAL, length=100)
+        self.bead_scale = ttk.Scale(row1, from_=8, to=32, variable=self.bead_scale_var, orient=tk.HORIZONTAL, length=80)
         self.bead_scale.pack(side=tk.LEFT, padx=2)
-        self.bead_size_label = ttk.Label(row1, text="16px", width=6)
+        self.bead_size_label = ttk.Label(row1, text="16px", width=5)
         self.bead_size_label.pack(side=tk.LEFT)
         self.bead_scale.config(command=lambda v: self.bead_size_label.config(text=f"{int(float(v))}px"))
 
-        # ── 底部状态栏 ──
+        # 第二行：饱和度 + 对比度 + 最大颜色数 + 背景色
+        row2 = ttk.Frame(control_frame)
+        row2.pack(fill=tk.X, pady=2)
+
+        ttk.Label(row2, text="饱和度:").pack(side=tk.LEFT)
+        self.saturation_var = tk.DoubleVar(value=1.0)
+        ttk.Scale(row2, from_=0.0, to=2.0, variable=self.saturation_var, orient=tk.HORIZONTAL, length=100).pack(side=tk.LEFT, padx=2)
+        self.saturation_label = ttk.Label(row2, text="1.0", width=4)
+        self.saturation_label.pack(side=tk.LEFT)
+        self.saturation_var.trace_add("write", lambda *a: self.saturation_label.config(text=f"{self.saturation_var.get():.1f}"))
+
+        ttk.Label(row2, text="对比度:").pack(side=tk.LEFT, padx=(8, 0))
+        self.contrast_var = tk.DoubleVar(value=1.0)
+        ttk.Scale(row2, from_=0.0, to=2.0, variable=self.contrast_var, orient=tk.HORIZONTAL, length=100).pack(side=tk.LEFT, padx=2)
+        self.contrast_label = ttk.Label(row2, text="1.0", width=4)
+        self.contrast_label.pack(side=tk.LEFT)
+        self.contrast_var.trace_add("write", lambda *a: self.contrast_label.config(text=f"{self.contrast_var.get():.1f}"))
+
+        ttk.Label(row2, text="最大颜色:").pack(side=tk.LEFT, padx=(8, 0))
+        self.max_colors_var = tk.IntVar(value=0)
+        ttk.Spinbox(row2, from_=0, to=49, textvariable=self.max_colors_var, width=4).pack(side=tk.LEFT, padx=2)
+        ttk.Label(row2, text="(0=不限)").pack(side=tk.LEFT)
+
+        ttk.Label(row2, text="背景色:").pack(side=tk.LEFT, padx=(8, 0))
+        self.bg_color_var = tk.StringVar(value="")
+        bg_labels = [opt[0] for opt in self.BG_COLOR_OPTIONS]
+        ttk.Combobox(row2, textvariable=self.bg_color_var, values=bg_labels, width=16, state="readonly").pack(side=tk.LEFT, padx=2)
+        self.bg_color_var.set("不替换")
+
+        # ── 状态栏 ──
         status_frame = ttk.Frame(self.root, padding=(8, 4))
         status_frame.pack(fill=tk.X, side=tk.BOTTOM)
 
@@ -160,6 +192,14 @@ class BeadPatternApp:
         self.progress_bar.pack(side=tk.RIGHT, padx=(8, 0))
 
     # ── 事件处理 ──
+
+    def _get_bg_hex(self) -> str:
+        """将用户选择的背景色标签名转为 hex 值。"""
+        selected = self.bg_color_var.get()
+        for label, hex_val in self.BG_COLOR_OPTIONS:
+            if label == selected:
+                return hex_val
+        return ""
 
     def on_open_image(self):
         path = filedialog.askopenfilename(
@@ -173,7 +213,6 @@ class BeadPatternApp:
             self.original_image = load_image(path)
             self._display_original_preview()
 
-            # 自动填充文件名
             base = os.path.splitext(os.path.basename(path))[0]
             self._suggested_name = base
             self.status_label.config(text=f"已加载: {os.path.basename(path)}")
@@ -192,7 +231,6 @@ class BeadPatternApp:
         w = self.width_var.get()
         h = self.height_var.get()
 
-        # 超大尺寸警告
         if w * h > 40000:
             if not messagebox.askyesno("尺寸确认", f"图纸尺寸为 {w}×{h} = {w*h} 颗豆，\n处理可能需要较长时间。\n\n是否继续？"):
                 return
@@ -201,7 +239,6 @@ class BeadPatternApp:
         self.status_label.config(text="正在处理…")
         self.progress_bar.start(10)
 
-        # 在后台线程中处理，避免 UI 卡顿
         def process():
             try:
                 t0 = time.time()
@@ -212,6 +249,10 @@ class BeadPatternApp:
                     height=h,
                     dither=self.dither_var.get(),
                     bead_size=self.bead_scale_var.get(),
+                    saturation=self.saturation_var.get(),
+                    contrast=self.contrast_var.get(),
+                    max_colors=self.max_colors_var.get(),
+                    bg_color=self._get_bg_hex(),
                 )
                 elapsed = time.time() - t0
                 self.root.after(0, self._on_generation_done, pattern, counts, elapsed)
@@ -225,7 +266,6 @@ class BeadPatternApp:
         self.pattern_image = pattern
         self._display_pattern_preview()
 
-        # 更新状态
         color_count = len(counts)
         self.status_label.config(
             text=f"完成! 耗时 {elapsed:.1f}s | {color_count} 种颜色 | 总豆数: {sum(counts.values())}"
@@ -265,15 +305,14 @@ class BeadPatternApp:
     def _display_original_preview(self):
         if self.original_image is None:
             return
-        max_w, max_h = 400, 400
+        cw = self.left_canvas.winfo_width() or 400
+        ch = self.left_canvas.winfo_height() or 380
         img = self.original_image.copy()
-        img.thumbnail((max_w, max_h), Image.Resampling.LANCZOS)
+        img.thumbnail((cw - 10, ch - 10), Image.Resampling.LANCZOS)
         photo = ImageTk.PhotoImage(img)
 
         self.left_canvas.delete("all")
-        self.left_canvas.config(width=max_w, height=max_h)
-        self.left_canvas.create_image(max_w // 2, max_h // 2, image=photo, anchor=tk.CENTER)
-        # 保持引用防 GC
+        self.left_canvas.create_image(cw // 2, ch // 2, image=photo, anchor=tk.CENTER)
         self.left_canvas.image = photo
 
     def _display_pattern_preview(self):
@@ -286,10 +325,6 @@ class BeadPatternApp:
         self.right_canvas.create_image(0, 0, image=photo, anchor=tk.NW)
         self.right_canvas.image = photo
 
-    def _on_right_canvas_resize(self, event):
-        # 如果图纸小于画布，取消滚动条
-        pass
-
     def _on_palette_change(self, event=None):
         name = self.palette_var.get()
         try:
@@ -301,8 +336,9 @@ class BeadPatternApp:
     def _show_about(self):
         messagebox.showinfo(
             "关于",
-            "拼豆图纸生成器 v1.0\n\n"
-            "将图片自动转换为拼豆图纸，\n"
-            "支持 Perler 标准色板。\n\n"
+            "拼豆图纸生成器 v1.1\n\n"
+            "将图片自动转换为拼豆图纸\n"
+            "支持 Perler 标准色板\n"
+            "可调饱和度 / 对比度 / 颜色数量 / 背景色\n\n"
             "基于 Python + Pillow + NumPy 构建。"
         )
