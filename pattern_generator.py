@@ -249,31 +249,24 @@ def generate_pattern(
     contrast: float = 1.0,
     max_colors: int = 0,
     bg_color: str = "",
-) -> tuple[Image.Image, dict[int, int]]:
+) -> tuple[Image.Image, dict[int, int], np.ndarray]:
     """完整流程：加载 → 饱和度 → 对比度 → 背景色 → 缩放 → 量化 → 渲染。
 
     Returns:
-        (输出 PIL 图片, {颜色ID: 用量, ...})
+        (输出 PIL 图片, {颜色ID: 用量, ...}, 原始索引数组 (H,W))
     """
     img = image.copy()
 
-    # 1. 饱和度
     if saturation != 1.0:
         img = adjust_saturation(img, saturation)
-
-    # 2. 对比度
     if contrast != 1.0:
         img = adjust_contrast(img, contrast)
-
-    # 3. 背景色替换（仅在用户指定时）
     if bg_color and bg_color.strip():
         img = replace_background(img, bg_color.strip())
 
-    # 4. 缩放
     resized = resize_image(img, width, height)
     arr = np.array(resized, dtype=np.float64)
 
-    # 5. 量化
     if max_colors > 0 and max_colors < len(palette):
         indices = quantize_image_with_limit(arr, palette, max_colors)
     elif dither:
@@ -281,13 +274,85 @@ def generate_pattern(
     else:
         indices = quantize_image(arr, palette)
 
-    # 6. 统计用量
+    # 统计用量
     color_counts = {}
     for idx in indices.flat:
         cid = palette.get_color_by_index(int(idx))["id"]
         color_counts[cid] = color_counts.get(cid, 0) + 1
 
-    # 7. 渲染
     output_img = render_pattern_image(indices, palette, bead_size, show_numbers=True)
 
-    return output_img, color_counts
+    return output_img, color_counts, indices
+
+
+def rerender_with_removed_colors(
+    indices: np.ndarray,
+    palette: BeadPalette,
+    removed_color_ids: set[int],
+    bead_size: int = 16,
+) -> tuple[Image.Image, dict[int, int], np.ndarray]:
+    """从索引数组中移除指定颜色，用色板中最接近的其他颜色替换，重新渲染。
+
+    Args:
+        indices: 原始 (H,W) 色板索引数组
+        palette: 色板对象
+        removed_color_ids: 用户要删除的颜色 ID 集合
+        bead_size: 豆粒像素大小
+
+    Returns:
+        (新输出图片, 新颜色用量, 新索引数组)
+    """
+    if not removed_color_ids:
+        output_img = render_pattern_image(indices, palette, bead_size, show_numbers=True)
+        color_counts = {}
+        for idx in indices.flat:
+            cid = palette.get_color_by_index(int(idx))["id"]
+            color_counts[cid] = color_counts.get(cid, 0) + 1
+        return output_img, color_counts, indices
+
+    # 构建需要被替换的色板索引集合
+    removed_palette_indices = set()
+    for cid in removed_color_ids:
+        for i, c in enumerate(palette.colors):
+            if c["id"] == cid:
+                removed_palette_indices.add(i)
+                break
+
+    if not removed_palette_indices:
+        output_img = render_pattern_image(indices, palette, bead_size, show_numbers=True)
+        color_counts = {}
+        for idx in indices.flat:
+            cid = palette.get_color_by_index(int(idx))["id"]
+            color_counts[cid] = color_counts.get(cid, 0) + 1
+        return output_img, color_counts, indices
+
+    new_indices = indices.copy()
+
+    # 为每个被删除的颜色找到色板中最接近的未删除颜色
+    replacement_map: dict[int, int] = {}
+    palette_rgb = palette.rgb_array  # (M, 3)
+
+    for pi in removed_palette_indices:
+        best_dist = float("inf")
+        best_idx = pi
+        pixel = palette_rgb[pi].astype(np.float64)
+        for j in range(len(palette_rgb)):
+            if j in removed_palette_indices:
+                continue
+            d = np.sqrt(np.sum((palette_rgb[j].astype(np.float64) - pixel) ** 2))
+            if d < best_dist:
+                best_dist = d
+                best_idx = j
+        replacement_map[pi] = best_idx
+
+    # 执行替换
+    for pi, ri in replacement_map.items():
+        new_indices[new_indices == pi] = ri
+
+    color_counts = {}
+    for idx in new_indices.flat:
+        cid = palette.get_color_by_index(int(idx))["id"]
+        color_counts[cid] = color_counts.get(cid, 0) + 1
+
+    output_img = render_pattern_image(new_indices, palette, bead_size, show_numbers=True)
+    return output_img, color_counts, new_indices

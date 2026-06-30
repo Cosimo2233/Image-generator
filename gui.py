@@ -6,10 +6,11 @@ import time
 import tkinter as tk
 from tkinter import filedialog, messagebox, ttk
 
+import numpy as np
 from PIL import Image, ImageTk
 
 from palette import load_palette, list_available_palettes
-from pattern_generator import generate_pattern, load_image
+from pattern_generator import generate_pattern, load_image, rerender_with_removed_colors
 
 
 class BeadPatternApp:
@@ -26,7 +27,6 @@ class BeadPatternApp:
         ("所有文件", "*.*"),
     )
 
-    # 预设背景色选项
     BG_COLOR_OPTIONS = [
         ("不替换", ""),
         ("白色 #FFFFFF", "#FFFFFF"),
@@ -48,6 +48,8 @@ class BeadPatternApp:
         self.pattern_image: Image.Image | None = None
         self.current_palette = load_palette()
         self._processing = False
+        self._indices: np.ndarray | None = None  # 原始索引数组 (H,W)
+        self._removed_color_ids: set[int] = set()  # 用户删除的颜色 ID
 
         self._setup_styles()
         self._create_widgets()
@@ -90,7 +92,7 @@ class BeadPatternApp:
         main_paned.pack(fill=tk.BOTH, expand=True, padx=8, pady=(4, 0))
 
         left_frame = ttk.LabelFrame(main_paned, text="原始图片", padding=(4, 4))
-        right_frame = ttk.LabelFrame(main_paned, text="拼豆图纸", padding=(4, 4))
+        right_frame = ttk.LabelFrame(main_paned, text="拼豆图纸（点击图例中的颜色可删除）", padding=(4, 4))
 
         main_paned.add(left_frame, weight=1)
         main_paned.add(right_frame, weight=1)
@@ -116,13 +118,13 @@ class BeadPatternApp:
         self.h_scroll.pack(side=tk.BOTTOM, fill=tk.X)
         self.v_scroll.pack(side=tk.RIGHT, fill=tk.Y)
         self.right_canvas.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
-        self.right_canvas.create_text(250, 205, text="生成后图纸将显示在这里", fill="#999999", font=("", 10), tags="placeholder")
+        self.right_canvas.create_text(250, 205, text="生成后图纸将显示在这里\n点击图例中的颜色可以删除它", fill="#999999", font=("", 10), tags="placeholder")
 
         # ── 底部控制面板（两行） ──
         control_frame = ttk.LabelFrame(self.root, text="设置", padding=(8, 6))
         control_frame.pack(fill=tk.X, padx=8, pady=(4, 0))
 
-        # 第一行：尺寸 + 色板 + 抖动的开关
+        # 第一行：尺寸 + 色板 + 抖动 + 豆粒
         row1 = ttk.Frame(control_frame)
         row1.pack(fill=tk.X, pady=2)
 
@@ -159,6 +161,8 @@ class BeadPatternApp:
         ttk.Label(row2, text="饱和度:").pack(side=tk.LEFT)
         self.saturation_var = tk.DoubleVar(value=1.0)
         ttk.Scale(row2, from_=0.0, to=2.0, variable=self.saturation_var, orient=tk.HORIZONTAL, length=100).pack(side=tk.LEFT, padx=2)
+        ttk.Button(row2, text="−", width=2, command=lambda: self._adj_saturation(-0.1)).pack(side=tk.LEFT)
+        ttk.Button(row2, text="+", width=2, command=lambda: self._adj_saturation(0.1)).pack(side=tk.LEFT)
         self.saturation_label = ttk.Label(row2, text="1.0", width=4)
         self.saturation_label.pack(side=tk.LEFT)
         self.saturation_var.trace_add("write", lambda *a: self.saturation_label.config(text=f"{self.saturation_var.get():.1f}"))
@@ -166,6 +170,8 @@ class BeadPatternApp:
         ttk.Label(row2, text="对比度:").pack(side=tk.LEFT, padx=(8, 0))
         self.contrast_var = tk.DoubleVar(value=1.0)
         ttk.Scale(row2, from_=0.0, to=2.0, variable=self.contrast_var, orient=tk.HORIZONTAL, length=100).pack(side=tk.LEFT, padx=2)
+        ttk.Button(row2, text="−", width=2, command=lambda: self._adj_contrast(-0.1)).pack(side=tk.LEFT)
+        ttk.Button(row2, text="+", width=2, command=lambda: self._adj_contrast(0.1)).pack(side=tk.LEFT)
         self.contrast_label = ttk.Label(row2, text="1.0", width=4)
         self.contrast_label.pack(side=tk.LEFT)
         self.contrast_var.trace_add("write", lambda *a: self.contrast_label.config(text=f"{self.contrast_var.get():.1f}"))
@@ -193,8 +199,15 @@ class BeadPatternApp:
 
     # ── 事件处理 ──
 
+    def _adj_saturation(self, delta: float):
+        v = self.saturation_var.get() + delta
+        self.saturation_var.set(round(max(0.0, min(2.0, v)), 1))
+
+    def _adj_contrast(self, delta: float):
+        v = self.contrast_var.get() + delta
+        self.contrast_var.set(round(max(0.0, min(2.0, v)), 1))
+
     def _get_bg_hex(self) -> str:
-        """将用户选择的背景色标签名转为 hex 值。"""
         selected = self.bg_color_var.get()
         for label, hex_val in self.BG_COLOR_OPTIONS:
             if label == selected:
@@ -224,7 +237,6 @@ class BeadPatternApp:
         if self.original_image is None:
             messagebox.showwarning("提示", "请先打开一张图片！")
             return
-
         if self._processing:
             return
 
@@ -239,10 +251,13 @@ class BeadPatternApp:
         self.status_label.config(text="正在处理…")
         self.progress_bar.start(10)
 
+        # 重置删除状态
+        self._removed_color_ids.clear()
+
         def process():
             try:
                 t0 = time.time()
-                pattern, counts = generate_pattern(
+                pattern, counts, indices = generate_pattern(
                     self.original_image,
                     self.current_palette,
                     width=w,
@@ -255,15 +270,17 @@ class BeadPatternApp:
                     bg_color=self._get_bg_hex(),
                 )
                 elapsed = time.time() - t0
-                self.root.after(0, self._on_generation_done, pattern, counts, elapsed)
+                self.root.after(0, self._on_generation_done, pattern, counts, indices, elapsed)
             except Exception as e:
                 self.root.after(0, self._on_generation_error, str(e))
 
         t = threading.Thread(target=process, daemon=True)
         t.start()
 
-    def _on_generation_done(self, pattern: Image.Image, counts, elapsed: float):
+    def _on_generation_done(self, pattern: Image.Image, counts, indices: np.ndarray, elapsed: float):
         self.pattern_image = pattern
+        self._indices = indices
+        self._removed_color_ids.clear()
         self._display_pattern_preview()
 
         color_count = len(counts)
@@ -325,6 +342,93 @@ class BeadPatternApp:
         self.right_canvas.create_image(0, 0, image=photo, anchor=tk.NW)
         self.right_canvas.image = photo
 
+        # 绑定点击事件
+        self.right_canvas.bind("<Button-1>", self._on_pattern_click)
+
+    def _on_pattern_click(self, event):
+        """点击图纸区域 — 检测是否点击到了图例中的颜色，如果是则删除该颜色。"""
+        if self._indices is None or self._processing:
+            return
+
+        # 获取点击坐标（考虑滚动偏移）
+        x = self.right_canvas.canvasx(event.x)
+        y = self.right_canvas.canvasy(event.y)
+
+        # 图例位于图片右侧区域
+        # 图例起始 x = margin + grid_pixel_w + legend_margin
+        # 需要从图片属性反算
+        if self.pattern_image is None:
+            return
+
+        # 图例区域检测：右侧大约 220px 宽的区域是图例
+        img_w = self.pattern_image.width
+        legend_start_x = img_w - 220 - 16  # ~236px from right edge
+
+        if x < legend_start_x:
+            return  # 点击在网格区域，忽略
+
+        # 图例行高 22px + 起始位置
+        margin = 20
+        legend_y_start = margin
+
+        # 计算点击到了图例的第几行
+        row = int((y - legend_y_start) // 22)
+        if row < 0:
+            return
+
+        # 获取当前展示的所有颜色 ID（按 ID 排序）
+        current_counts = {}
+        for idx in self._indices.flat:
+            cid = self.current_palette.get_color_by_index(int(idx))["id"]
+            current_counts[cid] = current_counts.get(cid, 0) + 1
+        sorted_colors = sorted(current_counts.items(), key=lambda x: x[0])
+
+        if row >= len(sorted_colors):
+            return
+
+        cid_to_remove = sorted_colors[row][0]
+
+        # 如果是最后一种颜色，不允许删除
+        if len(sorted_colors) <= 1:
+            messagebox.showwarning("提示", "至少保留一种颜色！")
+            return
+
+        # 如果已经删除了，忽略
+        if cid_to_remove in self._removed_color_ids:
+            return
+
+        # 确认
+        color_info = self.current_palette.get_color_by_id(cid_to_remove)
+        name = color_info["name"] if color_info else str(cid_to_remove)
+
+        if not messagebox.askyesno("删除颜色", f"确定要删除颜色「{name}」(编号 {cid_to_remove}) 吗？\n\n该颜色的所有豆子将替换为色板中最接近的其他颜色。"):
+            return
+
+        self._removed_color_ids.add(cid_to_remove)
+        self.status_label.config(text=f"已删除颜色 {name}，正在重新渲染…")
+
+        # 后台重新渲染
+        def process():
+            try:
+                new_pattern, new_counts, new_indices = rerender_with_removed_colors(
+                    self._indices, self.current_palette,
+                    self._removed_color_ids, self.bead_scale_var.get(),
+                )
+                self.root.after(0, self._on_rerender_done, new_pattern, new_indices, new_counts)
+            except Exception as e:
+                self.root.after(0, self._on_generation_error, str(e))
+
+        t = threading.Thread(target=process, daemon=True)
+        t.start()
+
+    def _on_rerender_done(self, new_pattern: Image.Image, new_indices: np.ndarray, new_counts):
+        self.pattern_image = new_pattern
+        self._indices = new_indices
+        self._display_pattern_preview()
+        self.status_label.config(
+            text=f"已删除颜色 | 剩余 {len(new_counts)} 种颜色 | 总豆数: {sum(new_counts.values())}"
+        )
+
     def _on_palette_change(self, event=None):
         name = self.palette_var.get()
         try:
@@ -336,9 +440,10 @@ class BeadPatternApp:
     def _show_about(self):
         messagebox.showinfo(
             "关于",
-            "拼豆图纸生成器 v1.1\n\n"
+            "拼豆图纸生成器 v1.2\n\n"
             "将图片自动转换为拼豆图纸\n"
             "支持 Perler 标准色板\n"
-            "可调饱和度 / 对比度 / 颜色数量 / 背景色\n\n"
+            "可调饱和度 / 对比度 / 颜色数量 / 背景色\n"
+            "支持点击图纸图例删除不想要的颜色\n\n"
             "基于 Python + Pillow + NumPy 构建。"
         )
