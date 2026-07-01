@@ -1,0 +1,447 @@
+[
+  {
+    "id": "R01",
+    "name": "<span style=\"display:inline-block;width:42px;height:16px;border:1px solid #999;background:#EAEEF3;\"></span>",
+    "hex": "#EAEEF3"
+  },
+  {
+    "id": "R02",
+    "name": "<span style=\"display:inline-block;width:42px;height:16px;border:1px solid #999;background:#EE927C;\"></span>",
+    "hex": "#EE927C"
+  },
+  {
+    "id": "R03",
+    "name": "<span style=\"display:inline-block;width:42px;height:16px;border:1px solid #999;background:#FFA630;\"></span>",
+    "hex": "#FFA630"
+  },
+  {
+    "id": "R04",
+    "name": "<span style=\"display:inline-block;width:42px;height:16px;border:1px solid #999;background:#EB6027;\"></span>",
+    "hex": "#EB6027"
+  },
+  {
+    "id": "R05",
+    "name": "<span style=\"display:inline-block;width:42px;height:16px;border:1px solid #999;background:#CB3531;\"></span>",
+    "hex": "#CB3531"
+  },
+  {
+    "id": "R06",
+    "name": "<span style=\"display:inline-block;width:42px;height:16px;border:1px solid #999;background:#EF67B2;\"></span>",
+    "hex": "#EF67B2"
+  },
+  {
+    "id": "R07",
+    "name": "<span style=\"display:inline-block;width:42px;height:16px;border:1px solid #999;background:#959698;\"></span>",
+    "hex": "#959698"
+  },
+  {
+    "id": "R08",
+    "name": "<span style=\"display:inline-block;width:42px;height:16px;border:1px solid #999;background:#1FC467;\"></span>",
+    "hex": "#1FC467"
+  },
+  {
+    "id": "R09",
+    "name": "<span style=\"display:inline-block;width:42px;height:16px;border:1px solid #999;background:#00685E;\"></span>",
+    "hex": "#00685E"
+  },
+  {
+    "id": "R10",
+    "name": "<span style=\"display:inline-block;width:42px;height:16px;border:1px solid #999;background:#2EABD8;\"></span>",
+    "hex": "#2EABD8"
+  },
+  {
+    "id": "R11",
+    "name": "<span style=\"display:inline-block;width:42px;height:16px;border:1px solid #999;background:#004FA4;\"></span>",
+    "hex": "#004FA4"
+  },
+  {
+    "id": "R12",
+    "name": "<span style=\"display:inline-block;width:42px;height:16px;border:1px solid #999;background:#9165B2;\"></span>",
+    "hex": "#9165B2"
+  },
+  {
+    "id": "R13",
+    "name": "<span style=\"display:inline-block;width:42px;height:16px;border:1px solid #999;background:#292A2B;\"></span>",
+    "hex": "#292A2B"
+  },
+  {
+    "id": "R14",
+    "name": "<span style=\"display:inline-block;width:42px;height:16px;border:1px solid #999;background:#E1C835;\"></span>",
+    "hex": "#E1C835"
+  },
+  {
+    "id": "R15",
+    "name": "<span style=\"display:inline-block;width:42px;height:16px;border:1px solid #999;background:#9A4541;\"></span>",
+    "hex": "#9A4541"
+  },
+  {
+    "id": "R16",
+    "name": "<span style=\"display:inline-block;width:42px;height:16px;border:1px solid #999;background:#65463D;\"></span>",
+    "hex": "#65463D"
+  },
+  {
+    "id": "R17",
+    "name": "<span style=\"display:inline-block;width:42px;height:16px;border:1px solid #999;background:#895D49;\"></span>",
+    "hex": "#895D49"
+  },
+  {
+    "id": "R18",
+    "name": "<span style=\"display:inline-block;width:42px;height:16px;border:1px solid #999;background:#DCA384;\"></span>",
+    "hex": "#DCA384"
+  },
+  {
+    "id": "R19",
+    "name": "<span style=\"display:inline-block;width:42px;height:16px;border:1px solid #999;background:#F2BFB8;\"></span>",
+    "hex": "#F2BFB8"
+  },
+  {
+    "id": "R20",
+    "name": "<span style=\"display:inline-block;width:42px;height:16px;border:1px solid #999;background:#009053;\"></span>",
+    "hex": "#009053"
+  },
+  {
+    "id": "R21",
+    "name": "<span style=\"display:inline-block;width:42px;height:16px;border:1px solid #999;background:#8BB23A;\"></span>",
+    "hex": "#8BB23A"
+  },
+  {
+    "id": "R22",
+    "name": "<span style=\"display:inline-block;width:42px;height:16px;border:1px solid #999;background:#48337E;\"></span>",
+    "hex": "#48337E"
+  },
+  {
+    "id": "R23",
+    "name": "<span style=\"display:inline-block;width:42px;height:16px;border:1px solid #999;background:#644FA4;\"></span>",
+    "hex": "#644FA4"
+  },
+  {
+    "id": "R24",
+    "name": "<span style=\"display:inline-block;width:42px;height:16px;border:1px solid #999;background:#0078BF;\"></span>",
+    "hex": "#0078BF"
+  },
+  {
+    "id": "R25",
+    "name": "<span style=\"display:inline-block;width:42px;height:16px;border:1px solid #999;background:#DC519A;\"></span>",
+    "hex": "#DC519A"
+  },
+  {
+    "id": "R26",
+    "name": "<span style=\"display:inline-block;width:42px;height:16px;border:1px solid #999;background:#DA4383;\"></span>",
+    "hex": "#DA4383"
+  },
+  {
+    "id": "R27",
+    "name": "<span style=\"display:inline-block;width:42px;height:16px;border:1px solid #999;background:#EAC125;\"></span>",
+    "hex": "#EAC125"
+  },
+  {
+    "id": "R28",
+    "name": "<span style=\"display:inline-block;width:42px;height:16px;border:1px solid #999;background:#DDA1CC;\"></span>",
+    "hex": "#DDA1CC"
+  },
+  {
+    "id": "R29",
+    "name": "<span style=\"display:inline-block;width:42px;height:16px;border:1px solid #999;background:#E1D367;\"></span>",
+    "hex": "#E1D367"
+  },
+  {
+    "id": "R30",
+    "name": "<span style=\"display:inline-block;width:42px;height:16px;border:1px solid #999;background:#9EC9CD;\"></span>",
+    "hex": "#9EC9CD"
+  },
+  {
+    "id": "R31",
+    "name": "<span style=\"display:inline-block;width:42px;height:16px;border:1px solid #999;background:#B2D7CE;\"></span>",
+    "hex": "#B2D7CE"
+  },
+  {
+    "id": "R32",
+    "name": "<span style=\"display:inline-block;width:42px;height:16px;border:1px solid #999;background:#EED39E;\"></span>",
+    "hex": "#EED39E"
+  },
+  {
+    "id": "R33",
+    "name": "<span style=\"display:inline-block;width:42px;height:16px;border:1px solid #999;background:#C0B7D7;\"></span>",
+    "hex": "#C0B7D7"
+  },
+  {
+    "id": "R34",
+    "name": "<span style=\"display:inline-block;width:42px;height:16px;border:1px solid #999;background:#B61927;\"></span>",
+    "hex": "#B61927"
+  },
+  {
+    "id": "R35",
+    "name": "<span style=\"display:inline-block;width:42px;height:16px;border:1px solid #999;background:#E1CCD2;\"></span>",
+    "hex": "#E1CCD2"
+  },
+  {
+    "id": "R36",
+    "name": "<span style=\"display:inline-block;width:42px;height:16px;border:1px solid #999;background:#CE6D83;\"></span>",
+    "hex": "#CE6D83"
+  },
+  {
+    "id": "R37",
+    "name": "<span style=\"display:inline-block;width:42px;height:16px;border:1px solid #999;background:#60BFCB;\"></span>",
+    "hex": "#60BFCB"
+  },
+  {
+    "id": "R38",
+    "name": "<span style=\"display:inline-block;width:42px;height:16px;border:1px solid #999;background:#A3134A;\"></span>",
+    "hex": "#A3134A"
+  },
+  {
+    "id": "R39",
+    "name": "<span style=\"display:inline-block;width:42px;height:16px;border:1px solid #999;background:#E68739;\"></span>",
+    "hex": "#E68739"
+  },
+  {
+    "id": "R40",
+    "name": "<span style=\"display:inline-block;width:42px;height:16px;border:1px solid #999;background:#E182B0;\"></span>",
+    "hex": "#E182B0"
+  },
+  {
+    "id": "R41",
+    "name": "<span style=\"display:inline-block;width:42px;height:16px;border:1px solid #999;background:#9D5B2E;\"></span>",
+    "hex": "#9D5B2E"
+  },
+  {
+    "id": "R42",
+    "name": "<span style=\"display:inline-block;width:42px;height:16px;border:1px solid #999;background:#676B73;\"></span>",
+    "hex": "#676B73"
+  },
+  {
+    "id": "R43",
+    "name": "<span style=\"display:inline-block;width:42px;height:16px;border:1px solid #999;background:#70757B;\"></span>",
+    "hex": "#70757B"
+  },
+  {
+    "id": "R44",
+    "name": "<span style=\"display:inline-block;width:42px;height:16px;border:1px solid #999;background:#A7CDDE;\"></span>",
+    "hex": "#A7CDDE"
+  },
+  {
+    "id": "R45",
+    "name": "<span style=\"display:inline-block;width:42px;height:16px;border:1px solid #999;background:#00A5A1;\"></span>",
+    "hex": "#00A5A1"
+  },
+  {
+    "id": "R46",
+    "name": "<span style=\"display:inline-block;width:42px;height:16px;border:1px solid #999;background:#8EC324;\"></span>",
+    "hex": "#8EC324"
+  },
+  {
+    "id": "R47",
+    "name": "<span style=\"display:inline-block;width:42px;height:16px;border:1px solid #999;background:#B27938;\"></span>",
+    "hex": "#B27938"
+  },
+  {
+    "id": "R48",
+    "name": "<span style=\"display:inline-block;width:42px;height:16px;border:1px solid #999;background:#ECC03D;\"></span>",
+    "hex": "#ECC03D"
+  },
+  {
+    "id": "R49",
+    "name": "<span style=\"display:inline-block;width:42px;height:16px;border:1px solid #999;background:#921E5D;\"></span>",
+    "hex": "#921E5D"
+  },
+  {
+    "id": "R50",
+    "name": "<span style=\"display:inline-block;width:42px;height:16px;border:1px solid #999;background:#E2A488;\"></span>",
+    "hex": "#E2A488"
+  },
+  {
+    "id": "R51",
+    "name": "<span style=\"display:inline-block;width:42px;height:16px;border:1px solid #999;background:#DFDABD;\"></span>",
+    "hex": "#DFDABD"
+  },
+  {
+    "id": "R52",
+    "name": "<span style=\"display:inline-block;width:42px;height:16px;border:1px solid #999;background:#EADE7F;\"></span>",
+    "hex": "#EADE7F"
+  },
+  {
+    "id": "R53",
+    "name": "<span style=\"display:inline-block;width:42px;height:16px;border:1px solid #999;background:#55A4D9;\"></span>",
+    "hex": "#55A4D9"
+  },
+  {
+    "id": "R54",
+    "name": "<span style=\"display:inline-block;width:42px;height:16px;border:1px solid #999;background:#0084CE;\"></span>",
+    "hex": "#0084CE"
+  },
+  {
+    "id": "R55",
+    "name": "<span style=\"display:inline-block;width:42px;height:16px;border:1px solid #999;background:#36384D;\"></span>",
+    "hex": "#36384D"
+  },
+  {
+    "id": "R57",
+    "name": "<span style=\"display:inline-block;width:42px;height:16px;border:1px solid #999;background:#97CF87;\"></span>",
+    "hex": "#97CF87"
+  },
+  {
+    "id": "R58",
+    "name": "<span style=\"display:inline-block;width:42px;height:16px;border:1px solid #999;background:#E2E65D;\"></span>",
+    "hex": "#E2E65D"
+  },
+  {
+    "id": "R59",
+    "name": "<span style=\"display:inline-block;width:42px;height:16px;border:1px solid #999;background:#F96F40;\"></span>",
+    "hex": "#F96F40"
+  },
+  {
+    "id": "R60",
+    "name": "<span style=\"display:inline-block;width:42px;height:16px;border:1px solid #999;background:#E5533C;\"></span>",
+    "hex": "#E5533C"
+  },
+  {
+    "id": "R61",
+    "name": "<span style=\"display:inline-block;width:42px;height:16px;border:1px solid #999;background:#E9C1A6;\"></span>",
+    "hex": "#E9C1A6"
+  },
+  {
+    "id": "R63",
+    "name": "<span style=\"display:inline-block;width:42px;height:16px;border:1px solid #999;background:#B35540;\"></span>",
+    "hex": "#B35540"
+  },
+  {
+    "id": "R64",
+    "name": "<span style=\"display:inline-block;width:42px;height:16px;border:1px solid #999;background:#B11836;\"></span>",
+    "hex": "#B11836"
+  },
+  {
+    "id": "R66",
+    "name": "<span style=\"display:inline-block;width:42px;height:16px;border:1px solid #999;background:#8A7EC2;\"></span>",
+    "hex": "#8A7EC2"
+  },
+  {
+    "id": "R68",
+    "name": "<span style=\"display:inline-block;width:42px;height:16px;border:1px solid #999;background:#CDC03F;\"></span>",
+    "hex": "#CDC03F"
+  },
+  {
+    "id": "R69",
+    "name": "<span style=\"display:inline-block;width:42px;height:16px;border:1px solid #999;background:#00765F;\"></span>",
+    "hex": "#00765F"
+  },
+  {
+    "id": "R70",
+    "name": "<span style=\"display:inline-block;width:42px;height:16px;border:1px solid #999;background:#696046;\"></span>",
+    "hex": "#696046"
+  },
+  {
+    "id": "R71",
+    "name": "<span style=\"display:inline-block;width:42px;height:16px;border:1px solid #999;background:#CC9B74;\"></span>",
+    "hex": "#CC9B74"
+  },
+  {
+    "id": "R72",
+    "name": "<span style=\"display:inline-block;width:42px;height:16px;border:1px solid #999;background:#383E44;\"></span>",
+    "hex": "#383E44"
+  },
+  {
+    "id": "R73",
+    "name": "<span style=\"display:inline-block;width:42px;height:16px;border:1px solid #999;background:#007D2B;\"></span>",
+    "hex": "#007D2B"
+  },
+  {
+    "id": "R74",
+    "name": "<span style=\"display:inline-block;width:42px;height:16px;border:1px solid #999;background:#68C4D2;\"></span>",
+    "hex": "#68C4D2"
+  },
+  {
+    "id": "R75",
+    "name": "<span style=\"display:inline-block;width:42px;height:16px;border:1px solid #999;background:#009EC2;\"></span>",
+    "hex": "#009EC2"
+  },
+  {
+    "id": "R76",
+    "name": "<span style=\"display:inline-block;width:42px;height:16px;border:1px solid #999;background:#0093A9;\"></span>",
+    "hex": "#0093A9"
+  },
+  {
+    "id": "R77",
+    "name": "<span style=\"display:inline-block;width:42px;height:16px;border:1px solid #999;background:#D4D8D3;\"></span>",
+    "hex": "#D4D8D3"
+  },
+  {
+    "id": "R78",
+    "name": "<span style=\"display:inline-block;width:42px;height:16px;border:1px solid #999;background:#C2C4C2;\"></span>",
+    "hex": "#C2C4C2"
+  },
+  {
+    "id": "R79",
+    "name": "<span style=\"display:inline-block;width:42px;height:16px;border:1px solid #999;background:#A7ACAD;\"></span>",
+    "hex": "#A7ACAD"
+  },
+  {
+    "id": "R80",
+    "name": "<span style=\"display:inline-block;width:42px;height:16px;border:1px solid #999;background:#D9B35E;\"></span>",
+    "hex": "#D9B35E"
+  },
+  {
+    "id": "R81",
+    "name": "<span style=\"display:inline-block;width:42px;height:16px;border:1px solid #999;background:#BF9168;\"></span>",
+    "hex": "#BF9168"
+  },
+  {
+    "id": "R82",
+    "name": "<span style=\"display:inline-block;width:42px;height:16px;border:1px solid #999;background:#AA744E;\"></span>",
+    "hex": "#AA744E"
+  },
+  {
+    "id": "R83",
+    "name": "<span style=\"display:inline-block;width:42px;height:16px;border:1px solid #999;background:#BB6833;\"></span>",
+    "hex": "#BB6833"
+  },
+  {
+    "id": "R84",
+    "name": "<span style=\"display:inline-block;width:42px;height:16px;border:1px solid #999;background:#BE5D65;\"></span>",
+    "hex": "#BE5D65"
+  },
+  {
+    "id": "R85",
+    "name": "<span style=\"display:inline-block;width:42px;height:16px;border:1px solid #999;background:#99323A;\"></span>",
+    "hex": "#99323A"
+  },
+  {
+    "id": "R86",
+    "name": "<span style=\"display:inline-block;width:42px;height:16px;border:1px solid #999;background:#E8AE00;\"></span>",
+    "hex": "#E8AE00"
+  },
+  {
+    "id": "R87",
+    "name": "<span style=\"display:inline-block;width:42px;height:16px;border:1px solid #999;background:#EC625E;\"></span>",
+    "hex": "#EC625E"
+  },
+  {
+    "id": "R88",
+    "name": "<span style=\"display:inline-block;width:42px;height:16px;border:1px solid #999;background:#565A5E;\"></span>",
+    "hex": "#565A5E"
+  },
+  {
+    "id": "R89",
+    "name": "<span style=\"display:inline-block;width:42px;height:16px;border:1px solid #999;background:#ADAD29;\"></span>",
+    "hex": "#ADAD29"
+  },
+  {
+    "id": "R90",
+    "name": "<span style=\"display:inline-block;width:42px;height:16px;border:1px solid #999;background:#8F8E3C;\"></span>",
+    "hex": "#8F8E3C"
+  },
+  {
+    "id": "R91",
+    "name": "<span style=\"display:inline-block;width:42px;height:16px;border:1px solid #999;background:#5AB0BF;\"></span>",
+    "hex": "#5AB0BF"
+  },
+  {
+    "id": "R92",
+    "name": "<span style=\"display:inline-block;width:42px;height:16px;border:1px solid #999;background:#0084B2;\"></span>",
+    "hex": "#0084B2"
+  },
+  {
+    "id": "R93",
+    "name": "<span style=\"display:inline-block;width:42px;height:16px;border:1px solid #999;background:#153838;\"></span>",
+    "hex": "#153838"
+  }
+]
