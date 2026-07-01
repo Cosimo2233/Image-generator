@@ -249,6 +249,7 @@ def generate_pattern(
     contrast: float = 1.0,
     max_colors: int = 0,
     bg_color: str = "",
+    show_numbers: bool = True,
 ) -> tuple[Image.Image, dict[int, int], np.ndarray]:
     """完整流程：加载 → 饱和度 → 对比度 → 背景色 → 缩放 → 量化 → 渲染。
 
@@ -280,7 +281,7 @@ def generate_pattern(
         cid = palette.get_color_by_index(int(idx))["id"]
         color_counts[cid] = color_counts.get(cid, 0) + 1
 
-    output_img = render_pattern_image(indices, palette, bead_size, show_numbers=True)
+    output_img = render_pattern_image(indices, palette, bead_size, show_numbers=show_numbers)
 
     return output_img, color_counts, indices
 
@@ -290,6 +291,7 @@ def rerender_with_removed_colors(
     palette: BeadPalette,
     removed_color_ids: set[int],
     bead_size: int = 16,
+    show_numbers: bool = True,
 ) -> tuple[Image.Image, dict[int, int], np.ndarray]:
     """从索引数组中移除指定颜色，用色板中最接近的其他颜色替换，重新渲染。
 
@@ -298,12 +300,13 @@ def rerender_with_removed_colors(
         palette: 色板对象
         removed_color_ids: 用户要删除的颜色 ID 集合
         bead_size: 豆粒像素大小
+        show_numbers: 是否在格子上显示编号
 
     Returns:
         (新输出图片, 新颜色用量, 新索引数组)
     """
     if not removed_color_ids:
-        output_img = render_pattern_image(indices, palette, bead_size, show_numbers=True)
+        output_img = render_pattern_image(indices, palette, bead_size, show_numbers=show_numbers)
         color_counts = {}
         for idx in indices.flat:
             cid = palette.get_color_by_index(int(idx))["id"]
@@ -319,7 +322,7 @@ def rerender_with_removed_colors(
                 break
 
     if not removed_palette_indices:
-        output_img = render_pattern_image(indices, palette, bead_size, show_numbers=True)
+        output_img = render_pattern_image(indices, palette, bead_size, show_numbers=show_numbers)
         color_counts = {}
         for idx in indices.flat:
             cid = palette.get_color_by_index(int(idx))["id"]

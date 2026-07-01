@@ -146,6 +146,9 @@ class BeadPatternApp:
         self.dither_var = tk.BooleanVar(value=True)
         ttk.Checkbutton(row1, text="抖动", variable=self.dither_var).pack(side=tk.LEFT, padx=(8, 0))
 
+        self.show_numbers_var = tk.BooleanVar(value=True)
+        ttk.Checkbutton(row1, text="编号", variable=self.show_numbers_var).pack(side=tk.LEFT, padx=(4, 0))
+
         ttk.Label(row1, text="豆粒:").pack(side=tk.LEFT, padx=(8, 0))
         self.bead_scale_var = tk.IntVar(value=16)
         self.bead_scale = ttk.Scale(row1, from_=8, to=32, variable=self.bead_scale_var, orient=tk.HORIZONTAL, length=80)
@@ -268,6 +271,7 @@ class BeadPatternApp:
                     contrast=self.contrast_var.get(),
                     max_colors=self.max_colors_var.get(),
                     bg_color=self._get_bg_hex(),
+                    show_numbers=self.show_numbers_var.get(),
                 )
                 elapsed = time.time() - t0
                 self.root.after(0, self._on_generation_done, pattern, counts, indices, elapsed)
@@ -413,6 +417,7 @@ class BeadPatternApp:
                 new_pattern, new_counts, new_indices = rerender_with_removed_colors(
                     self._indices, self.current_palette,
                     self._removed_color_ids, self.bead_scale_var.get(),
+                    show_numbers=self.show_numbers_var.get(),
                 )
                 self.root.after(0, self._on_rerender_done, new_pattern, new_indices, new_counts)
             except Exception as e:
